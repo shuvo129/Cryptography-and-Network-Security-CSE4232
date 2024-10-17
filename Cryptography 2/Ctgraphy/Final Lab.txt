@@ -1,0 +1,416 @@
+1. Caesar Cipher 
+#include<bits/stdc++.h>
+using namespace std;
+
+string encrypt(string text, int shift)
+{
+    string str = "";
+    for(int i=0; i<text.size(); i++)
+    {
+        if(isupper(text[i]))
+        {
+            char ch = (text[i]+shift-'A')%26 + 'A';
+            str.push_back(ch);
+        }
+        else if(islower(text[i]))
+        {
+            char ch = (text[i]+shift-'a')%26 + 'a';
+            str.push_back(ch);
+        }
+        else
+            str.push_back(text[i]);
+    }
+    return str;
+}
+
+string decrypt(string text, int shift)
+{
+    string str = "";
+    for(int i=0; i<text.size(); i++)
+    {
+        if(isupper(text[i]))
+        {
+            char ch = (text[i]+shift-'A')%26 + 'A';
+            str.push_back(ch);
+        }
+        else if(islower(text[i]))
+        {
+            char ch = (text[i]+shift-'a')%26 + 'a';
+            str.push_back(ch);
+        }
+        else
+            str.push_back(text[i]);
+    }
+    return str;
+}
+
+int main()
+{
+    string text;
+    cout<<"Enter your original text: ";
+    getline(cin, text);
+
+    int shift;
+    cout<<"Enter how many shift to the right: ";
+    cin>>shift;
+    shift = shift%26;
+
+    cout<<"\nPlain Text: "<<text<<endl;
+
+    string chiper = encrypt(text, shift);
+    cout << "\nEncrypted Cipher: " << chiper <<endl;
+
+    string original = decrypt(chiper, 26-shift);
+    cout << "\nAfter Reverse Operation(Decryption): " << original <<endl;
+    return 0;
+}
+
+
+3.Transposition cipher 
+
+#include<bits/stdc++.h>
+using namespace std;
+
+string encrypt(string text, int width)
+{
+    string str;
+    int col = 0, i = 0;
+    while(col < width)
+    {
+        str.push_back(text[i]);
+        i += width;
+        if(i >= text.size())
+            i = ++col;
+    }
+    return str;
+}
+
+string decrypt(string text, int width)
+{
+    string str(text.size(), ' ');
+    int col = 0, j = 0;
+    for(int i=0; i<text.size(); i++)
+    {
+        str[j] = text[i];
+        j += width;
+        if(j >= text.size())
+            j = ++col;
+    }
+    return str;
+}
+
+int main()
+{
+    string text = "DEPARTMENT OF COMPUTER SCIENCE AND TECHNOLOGY UNIVERSITY OF RAJSHAHI BANGLADESH";
+
+    int width;
+    cout<<"Enter width: ";
+    cin>>width;
+
+    cout<<"\nPlain Text: "<<text<<endl;
+
+    string chiper = encrypt(text, width);
+    cout << "\nEncrypted Cipher: " << chiper <<endl;
+
+    string original = decrypt(chiper, width);
+    cout << "\nAfter Reverse Operation(Decryption): " << original <<endl;
+    return 0;
+}
+
+
+4.Double Transposition Cipher 
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+string encrypt(string text, int width)
+{
+    string str;
+    int col = 0, i = 0;
+    while(col < width)
+    {
+        str.push_back(text[i]);
+        i += width;
+        if(i >= text.size())
+            i = ++col;
+    }
+    return str;
+}
+
+string decrypt(string text, int width)
+{
+    string str(text.size(), ' ');
+    int col = 0, j = 0;
+    for(int i=0; i<text.size(); i++)
+    {
+        str[j] = text[i];
+        j += width;
+        if(j >= text.size())
+            j = ++col;
+    }
+    return str;
+}
+
+int main()
+{
+    string text = "DEPARTMENT OF COMPUTER SCIENCE AND TECHNOLOGY UNIVERSITY OF RAJSHAHI BANGLADESH";
+
+    int width;
+    cout<<"Enter width: ";
+    cin>>width;
+
+    cout<<"\nPlain Text: "<<text<<endl;
+
+    string chiper = encrypt(text, width);
+    chiper = encrypt(chiper, width);
+    cout << "\nEncrypted Cipher: " << chiper <<endl;
+
+    string original = decrypt(chiper, width);
+    original = decrypt(original, width);
+    cout << "\nAfter Reverse Operation(Decryption): " << original <<endl;
+    return 0;
+}
+
+
+5. One Time Pad
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+string One_Time_Pad_Encription(string plainText, string keyvalues)
+{
+
+    string withoutSpacePlainText = "";
+    string withoutSpaceKeyvalues = "";
+
+    for(int i = 0; i < plainText.size(); i++){
+        if((plainText[i] >= 'A' && plainText[i] <= 'Z') || (plainText[i] >= 'a' && plainText[i] <= 'z')){
+            withoutSpacePlainText += toupper(plainText[i]);
+        }
+    }
+
+    for(int i = 0; i < keyvalues.size(); i++){
+        if((keyvalues[i] >= 'A' && keyvalues[i] <= 'Z') || (keyvalues[i] >= 'a' && keyvalues[i] <= 'z')){
+            withoutSpaceKeyvalues += toupper(keyvalues[i]);
+        }
+    }
+
+    int ln1 = withoutSpacePlainText.size();
+    int ln2 = withoutSpaceKeyvalues.size();
+
+    string newKeyValues = "", finalKeyValues = "";
+
+    if(ln1 > ln2){
+        int extra = ln1 - ln2;
+
+        int extratime = extra / ln2;
+        if(extra % ln2 != 0) extratime++;
+
+        int cnt = 0;
+        while (cnt <= extratime){
+            for(int i = 0; i < ln2; i++){
+                newKeyValues += withoutSpaceKeyvalues[i];
+            }
+            cnt++;
+        }
+        for(int i = 0; i < ln1; i++){
+            finalKeyValues += newKeyValues[i];
+        }
+    }
+    else if(ln1 <= ln2){
+        for(int i = 0; i < ln1; i++){
+            finalKeyValues += withoutSpaceKeyvalues[i];
+        }
+    }
+
+    string ansCipherText = "";
+    for(int i = 0; i < ln1; i++){
+        int sum = ((withoutSpacePlainText[i] - 'A') + (finalKeyValues[i] - 'A') + 1) % 26;
+        ansCipherText += (sum + 'A');
+    }
+
+    cout << "Plain Text : Key Text ..." << endl;
+    cout << withoutSpacePlainText << " " << finalKeyValues << endl;
+
+    return ansCipherText;
+}
+
+
+
+int main()
+{
+    string plaintext, keyvalue;
+
+    cout << "Enter Plain Text..." << endl;
+    getline(cin, plaintext);
+
+    cout << "Enter key values..." << endl;
+    getline(cin, keyvalue);
+
+    string ans = One_Time_Pad_Encription(plaintext, keyvalue);
+    cout << "Cipher Text..." << endl;
+    cout << ans << endl;
+}
+
+
+6.Lehman Algorithm -> P is prime or not
+
+#include<bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+ll Bigmod(ll a, ll b, ll m)
+{
+    ll res = 1;
+    for(ll i = 1; i<=b; i++)
+    {
+        res = (res*a) % m;
+    }
+    return res;
+}
+
+bool lehmannAglorithm(ll p, int test)
+{
+    if(p==2 || p==3)
+        return 1;
+    if(p==1 || p%2==0)
+        return 0;
+
+    for(int i=0; i<test; i++)
+    {
+        ll a = 2 + (rand() % (p-3));
+        ll L = Bigmod(a, (p-1)/2, p);
+        if(L != 1 && L != -1 && L != (p-1))
+            return 0;
+    }
+    return 1;
+}
+
+int main()
+{
+    ll num; // 180181
+    cout<<"Enter a number: ";
+    cin>>num;
+
+    int test;
+    cout<< "Enter number of Test: ";
+    cin>>test;
+
+    int prime = lehmannAglorithm(num, test);
+    if(prime)
+        cout<<"May be Prime\n";
+    else
+        cout<<"Definitely not prime\n";
+    return 0;
+}
+
+7. Robin Miller Algorithm -> P is prime or not
+
+#include<bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+ll Bigmod(ll a, ll b, ll m)
+{
+    ll res = 1;
+    for(ll i = 1; i<=b; i++)
+    {
+        res = (res*a) % m;
+    }
+    return res;
+}
+
+bool RobinMiller(ll p)
+{
+    ll m = p - 1, b = 0;
+    while(m%2==0)
+    {
+        m /= 2;
+        b++;
+    }
+
+    ll a = 1 + rand()%(p-1);
+    ll j = 0, z = Bigmod(a, m, p);
+    if(z==1 || z==p-1)
+        return 1;
+L:
+    if(j>0 && z==1)
+        return 0;
+    j = j + 1;
+    if(j < b && z != p-1)
+    {
+        z = (z*z)%p;
+        goto L;
+    }
+    if(z==p-1)
+        return 1;
+    if(j==b && z != p-1)
+        return 0;
+}
+
+bool IsPrime(ll p, ll iter)
+{
+    if (p == 2 || p == 3)
+        return true;
+    if (p == 1 || p % 2 == 0)
+        return false;
+
+    for (long long i = 0; i < iter; i++)
+    {
+        if (RobinMiller(p) == false)
+            return false;
+    }
+    return true;
+}
+
+int main()
+{
+    ll num; // 180181
+    cout<<"Enter a number: ";
+    cin>>num;
+
+    int test;
+    cout<< "Enter number of Test: ";
+    cin>>test;
+
+    if(IsPrime(num, test))
+        cout<<"May be Prime\n";
+    else
+        cout<<"Definitely not prime\n";
+    return 0;
+}
+
+11. Diffie-Hellman Key Exchange Algorithm
+
+
+#include<bits/stdc++.h>
+#define ll long long
+using namespace std;
+
+ll Bigmod(ll a, ll b, ll m)
+{
+    ll res = 1;
+    for(ll i = 1; i<=b; i++)
+    {
+        res = (res*a) % m;
+    }
+    return res;
+}
+
+int main()
+{
+    srand(time(NULL));
+    ll q = 353, a = 3;
+    ll xa = 1 + rand()%(q-1);
+    ll xb = 1 + rand()%(q-1);
+
+    ll ya = Bigmod(a, xa, q);
+    ll yb = Bigmod(a, xb, q);
+
+    cout<<"A computes K: "<<Bigmod(yb, xa, q)<<endl;
+    cout<<"B computes K: "<<Bigmod(ya, xb, q)<<endl;
+    return 0;
+}
+
